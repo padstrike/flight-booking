@@ -19,18 +19,4 @@ export class PaymentsController {
   async createPayment(@Body() createPaymentDto: CreatePaymentDto) {
     return this.paymentsService.processPayment(createPaymentDto);
   }
-
-  @ApiOperation({ summary: 'Update payment status' })
-  @ApiResponse({ status: 200, description: 'Payment status successfully updated.' })
-  @ApiResponse({ status: 404, description: 'Payment not found.' })
-
-  @ApiBearerAuth()
-  @UseGuards(JwtAuthGuard)
-  @Patch('update-status/:paymentId')
-  async updatePaymentStatus(
-    @Param('paymentId') paymentId: string,
-    @Body('status') status: string,
-  ) {
-    return this.paymentsService.updatePaymentStatus(paymentId, status);
-  }
 }

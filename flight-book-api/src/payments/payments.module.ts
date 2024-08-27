@@ -8,7 +8,7 @@ import { BookingsModule } from '../bookings/bookings.module';  // Import booking
 @Module({
   imports: [
     MongooseModule.forFeature([{ name: Payment.name, schema: PaymentSchema }]),
-    BookingsModule,  // Import related modules like bookings
+    BookingsModule,
   ],
   controllers: [PaymentsController],
   providers: [PaymentsService],
