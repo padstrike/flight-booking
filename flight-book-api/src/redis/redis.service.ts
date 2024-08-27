@@ -3,7 +3,7 @@ import Redis from 'ioredis';
 
 @Injectable()
 export class RedisService {
-  private redisClient: Redis.Redis;
+  private redisClient: Redis;
 
   constructor() {
     this.redisClient = new Redis({

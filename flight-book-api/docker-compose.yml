@@ -1,0 +1,40 @@
+version: '3.8'
+services:
+  mongo:
+    image: mongo:latest
+    container_name: mongo-db
+    ports:
+      - '27017:27017'
+    volumes:
+      - mongo-data:/data/db
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: example
+
+  redis:
+    image: redis:latest
+    container_name: redis-cache
+    ports:
+      - '6379:6379'
+    volumes:
+      - redis-data:/data
+
+  # api:
+  #   build: .
+  #   container_name: nestjs-app
+  #   ports:
+  #     - '3000:3000'
+  #   depends_on:
+  #     - mongo
+  #     - redis
+  #   environment:
+  #     MONGO_URI: mongodb://root:example@mongo:27017/nest_flight_booking?authSource=admin
+  #     REDIS_HOST: redis
+  #     REDIS_PORT: 6379
+  #   volumes:
+  #     - .:/usr/src/app
+  #   command: npm run start:dev
+
+volumes:
+  mongo-data:
+  redis-data:

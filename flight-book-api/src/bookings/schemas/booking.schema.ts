@@ -9,11 +9,14 @@ export class Booking extends Document {
   @Prop({ required: true })
   flightId: string;
 
-  @Prop({ type: Object, required: true })  // Define the type explicitly
-  passengerDetails: any;  // If you have a more specific structure, you can create a nested schema instead of 'any'
-
   @Prop({ required: true })
   totalPrice: number;
+
+  @Prop({
+    type: [{ name: { type: String }, age: { type: Number } }],
+    required: true,
+  })
+  passengerDetails: { name: string; age: number }[];
 }
 
 export const BookingSchema = SchemaFactory.createForClass(Booking);
