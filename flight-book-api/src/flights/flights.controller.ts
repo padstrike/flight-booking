@@ -1,4 +1,4 @@
-import { Controller, Get, Param } from '@nestjs/common';
+import { Controller, Get, Param, Query } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { FlightsService } from './flights.service';
 
@@ -9,9 +9,22 @@ export class FlightsController {
 
   @ApiOperation({ summary: 'Retrieve a list of available flights' })
   @ApiResponse({ status: 200, description: 'List of flights retrieved successfully.' })
+  @Get()
+  getAllFlights(
+    @Query('origin') origin?: string,
+    @Query('destination') destination?: string,
+  ) {
+    return this.flightsService.getFlights(origin, destination);
+  }
+
+  @ApiOperation({ summary: 'Retrieve a list of available flights' })
+  @ApiResponse({ status: 200, description: 'List of flights retrieved successfully.' })
   @Get('search')
-  getFlights() {
-    return this.flightsService.getFlights();
+  searchFlights(
+    @Query('origin') origin?: string,
+    @Query('destination') destination?: string,
+  ) {
+    return this.flightsService.getFlights(origin, destination);
   }
 
   @ApiOperation({ summary: 'Retrieve flight details by ID' })

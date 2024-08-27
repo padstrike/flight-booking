@@ -7,8 +7,9 @@ import * as dotenv from 'dotenv';
 dotenv.config();
 
 async function bootstrap() {
+  
   const app = await NestFactory.create(AppModule);
-
+  app.enableCors();
   // Configure Swagger for API documentation
   const config = new DocumentBuilder()
     .setTitle('Flight Booking API')
