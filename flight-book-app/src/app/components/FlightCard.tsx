@@ -1,10 +1,11 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Card, Row, Col, Typography, Space, Button } from 'antd';
 import { ArrowRightOutlined } from '@ant-design/icons';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
+import { useFlightStore } from '../store/flightStore';
 
 const { Text } = Typography;
 
@@ -14,8 +15,10 @@ interface FlightCardProps {
 
 export default function FlightCard({ flight }: FlightCardProps) {
     const router = useRouter();
-
-    const handleBooking = () => {
+    const { setFlightsId, setLoading, flightId } = useFlightStore();
+    const handleFlightSelection = (selectedFlightId: number) => {
+        setFlightsId(selectedFlightId);
+        localStorage.setItem('selectedFlightId', selectedFlightId.toString());
         router.push('/api/auth/login');
     };
 
@@ -87,7 +90,11 @@ export default function FlightCard({ flight }: FlightCardProps) {
 
                 {/* Booking Button */}
                 <Row justify="end" style={{ marginTop: '20px' }}>
-                    <Button type="primary" size="large" onClick={handleBooking} style={{ fontSize: '1rem' }}>
+                    <Button
+                        type="primary"
+                        size="large"
+                        onClick={() => handleFlightSelection(flight.id)}
+                        style={{ fontSize: '1rem' }}>
                         Book Now
                     </Button>
                 </Row>

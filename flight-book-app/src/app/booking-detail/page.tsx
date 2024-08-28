@@ -2,41 +2,54 @@
 
 import React, { useState, useEffect } from 'react';
 import { Form, Input, Button, Card, Space, Typography, message, Divider, Spin, List } from 'antd';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { useUser } from '@auth0/nextjs-auth0/client';
+import { useFlightStore } from '../store/flightStore';
+import api from '../utils/api';
 
 const { Title, Text } = Typography;
 
 export default function BookingDetails() {
-    const { user, error, isLoading } = useUser();
+    const { user, isLoading } = useUser();
     const [flight, setFlight] = useState(null);
-    const [loading, setLoading] = useState(false);
-    const [loadingFlight, setLoadingFlight] = useState(true);
+    const [loadingFlight, setLoadingFlight] = useState(false);
     const [showHistory, setShowHistory] = useState(false);
     const [bookingHistory, setBookingHistory] = useState([]);
+    const [loading, setLoading] = useState(false);
     const router = useRouter();
-    const searchParams = useSearchParams();
-    const flightId = searchParams.get('flightId');
+    const { flightId, setFlightsId, setError } = useFlightStore();
 
     useEffect(() => {
-        // Simulate fetching flight data
-        const mockFlightData = {
-            id: flightId,
-            airline: 'Airline A',
-            departure: '10:00 AM',
-            arrival: '12:00 PM',
-            price: 200,
+        const storedFlightId = localStorage.getItem('selectedFlightId');
+        if (!storedFlightId) {
+            console.error("No flight ID found in local storage.");
+            message.error("No flight selected. Please select a flight.");
+            router.push('/flights'); // Redirect to flight selection if no ID found
+            return;
+        }
+
+        const fetchFlightDetails = async () => {
+            try {
+                setLoadingFlight(true);
+                console.log("Fetching flight details for ID:", storedFlightId);
+                const response = await api.get(`/flights/${storedFlightId}`);
+                setFlight(response.data);
+                setFlightsId(storedFlightId); // Set the flightId in the store
+                localStorage.removeItem('selectedFlightId'); // Clear after use
+            } catch (error) {
+                console.error("Failed to fetch flight details:", error);
+                setError(error.message);
+                message.error("Failed to load flight details.");
+            } finally {
+                setLoadingFlight(false);
+            }
         };
 
-        setTimeout(() => {
-            setFlight(mockFlightData);
-            setLoadingFlight(false);
-        }, 500);
-    }, [flightId]);
+        fetchFlightDetails();
+    }, [setError, setFlightsId, router]);
 
     useEffect(() => {
         if (user) {
-            // Simulate fetching booking history data
             const mockBookingHistory = [
                 {
                     id: '1',
@@ -70,42 +83,61 @@ export default function BookingDetails() {
                 throw new Error('Flight ID is not available.');
             }
 
-            const bookingResponse = {
-                _id: 'mock-booking-id',
-                flightId: flightId,
-                userId: 'mock-user-id',
+            // Step 1: Create the booking
+            const bookingDetails = {
+                userId: user.sub, // Get the user ID from Auth0
+                flightId,
                 totalPrice: flight.price,
                 passengerDetails: values.passengers,
             };
 
-            const paymentResponse = {
-                _id: 'mock-payment-id',
-                bookingId: bookingResponse._id,
-                encryptedPaymentDetails: 'mock-encrypted-payment-details',
-                status: 'pending',
-            };
+            console.log("Booking details:", bookingDetails , values);
 
-            message.success('Booking and payment were successful!');
-            router.push(`/booking/confirmation/${bookingResponse._id}`);
+            const bookingResponse = await api.post('/bookings', bookingDetails);
+
+            if (bookingResponse.status === 200) {
+                const bookingId = bookingResponse.data._id;
+
+                // Step 2: Submit the payment details
+                const paymentDetails = {
+                    userId: user.sub,
+                    bookingId,
+                    paymentDetails: {
+                        cardNumber: values.cardNumber,
+                        cardHolder: user.name,  // Assuming card holder name is the user's name
+                        expiryDate: values.expiry,
+                        cvv: values.cvv,
+                    }
+                };
+
+                const paymentResponse = await api.post('/payments/create', paymentDetails);
+
+                if (paymentResponse.status === 200) {
+                    message.success('Booking and payment were successful!');
+                    router.push(`/booking/confirmation/${bookingId}`);
+                } else {
+                    throw new Error('Payment processing failed.');
+                }
+            } else {
+                throw new Error('Booking failed.');
+            }
         } catch (error) {
-            message.error('Failed to complete booking and payment.');
+            console.error("Booking or payment error:", error);
+            message.error(error.message || 'Failed to complete booking and payment.');
         } finally {
             setLoading(false);
         }
     };
 
-    if (loadingFlight) {
+    if (loadingFlight || isLoading) {
         return <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
             <Spin size="large" />
         </div>;
     }
 
     if (!flight) {
-        return <p>No flight details available.</p>;
+        return <div>No flight details available.</div>;
     }
-
-    if (isLoading) return <div>Loading...</div>;
-    if (error) return <div>{error.message}</div>;
 
     return (
         <>
@@ -140,7 +172,10 @@ export default function BookingDetails() {
                 <div style={{ marginBottom: '1.5rem' }}>
                     <Text strong style={{ display: 'block', fontSize: '1.2rem' }}>Flight: {flight.airline}</Text>
                     <Text style={{ display: 'block', marginTop: '0.5rem', fontSize: '1rem' }}>
-                        Departure: {flight.departure} | Arrival: {flight.arrival}
+                        Origin: {flight.origin} | Destination: {flight.destination}
+                    </Text>
+                    <Text style={{ display: 'block', marginTop: '0.5rem', fontSize: '1rem' }}>
+                        Departure: {flight.departureTime} | Arrival: {flight.arrivalTime}
                     </Text>
                     <Text style={{ display: 'block', marginTop: '0.5rem', fontSize: '1rem' }}>
                         Price: <strong>${flight.price}</strong>
