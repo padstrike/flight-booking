@@ -9,8 +9,6 @@ import { CreateBookingDto } from './dto/create-booking.dto';
 export class BookingsController {
   constructor(private readonly bookingsService: BookingsService) {}
 
-  @ApiBearerAuth()
-  @UseGuards(JwtAuthGuard)
   @Post()
   @ApiOperation({ summary: 'Create a new booking' })
   @ApiResponse({ status: 201, description: 'Booking created successfully.' })
@@ -19,8 +17,6 @@ export class BookingsController {
     return this.bookingsService.createBooking(createBookingDto);
   }
 
-  @ApiBearerAuth()
-  @UseGuards(JwtAuthGuard)
   @Get('user/:userId')
   @ApiOperation({ summary: 'Get user bookings' })
   @ApiResponse({ status: 200, description: 'Bookings fetched successfully.' })

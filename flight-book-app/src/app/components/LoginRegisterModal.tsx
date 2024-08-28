@@ -1,9 +1,24 @@
+// components/LoginRegisterModal.tsx
+
 import React from 'react';
 import { Modal, Form, Input, Button, Typography } from 'antd';
+import { useAuthStore } from '../store/authStore'; // Import the Zustand store
 
 const { Text } = Typography;
 
-export default function LoginRegisterModal({ visible, onCancel, onLogin }) {
+export default function LoginRegisterModal( }) {
+  const login = useAuthStore((state) => state.login); // Get the login function from Zustand
+
+  const onFinish = async (values: { email: string; password: string }) => {
+    try {
+      await login(values.email, values.password);
+      onCancel(); // Close the modal on successful login
+    } catch (error) {
+      console.error('Failed to login:', error);
+      // Handle login failure (e.g., show an error message)
+    }
+  };
+
   return (
     <Modal
       title="Sign in"
@@ -11,7 +26,7 @@ export default function LoginRegisterModal({ visible, onCancel, onLogin }) {
       onCancel={onCancel}
       footer={null}
     >
-      <Form layout="vertical" onFinish={onLogin}>
+      <Form layout="vertical" onFinish={onFinish}>
         <Form.Item
           name="email"
           label="Email"
