@@ -57,52 +57,51 @@ export default function BookingDetails() {
     const router = useRouter();
     const { flightId, setFlightsId, setError } = useFlightStore();
 
-    // useEffect(() => {
-    //     const storedFlightId = localStorage.getItem('selectedFlightId');
+    useEffect(() => {
+        const storedFlightId = localStorage.getItem('selectedFlightId');
 
-    //     const fetchFlightDetails = async () => {
-    //         try {
-    //             setLoadingFlight(true);
-    //             console.log("Fetching flight details for ID:", storedFlightId);
-    //             const response = await api.get(`/flights/${storedFlightId}`);
-    //             setFlight(response.data);
-    //             setFlightsId(Number(storedFlightId));
-    //             localStorage.removeItem('selectedFlightId');
-    //         } catch (err) {
-    //             console.error("Failed to fetch flight details:", err);
-    //             setError(err as string);
-    //             // message.error("Failed to load flight details.");
-    //         } finally {
-    //             setLoadingFlight(false);
-    //         }
-    //     };
+        const fetchFlightDetails = async () => {
+            try {
+                setLoadingFlight(true);
+                console.log("Fetching flight details for ID:", storedFlightId);
+                const response = await api.get(`/flights/${storedFlightId}`);
+                setFlight(response.data);
+                setFlightsId(Number(storedFlightId));
+                localStorage.removeItem('selectedFlightId');
+            } catch (err) {
+                console.error("Failed to fetch flight details:", err);
+                setError(err as string);
+            } finally {
+                setLoadingFlight(false);
+            }
+        };
 
-    //     if (Number(storedFlightId) > 0) {
-    //         if (!storedFlightId) {
-    //             console.error("No flight ID found in local storage.");
-    //             message.error("No flight selected. Please select a flight.");
-    //             router.push('/flights');
-    //             return;
-    //         }
-    //         fetchFlightDetails();
-    //     }
-    // }, [setError, setFlightsId, router]);
+        if (Number(storedFlightId) > 0) {
+            if (!storedFlightId) {
+                console.error("No flight ID found in local storage.");
+                message.error("No flight selected. Please select a flight.");
+                router.push('/flights');
+                return;
+            }
+            fetchFlightDetails();
+        }
+    }, [setError, setFlightsId, router]);
 
-    // useEffect(() => {
-    //     const fetchBookingHistory = async (userId: string) => {
-    //         try {
-    //             const response = await api.get(`/payments/${userId}`);
-    //             setBookingHistory(response.data);
-    //         } catch (error) {
-    //             message.error("Failed to load booking history.");
-    //         }
-    //     };
+    useEffect(() => {
+        const fetchBookingHistory = async (userId: string) => {
+            try {
+                const response = await api.get(`/payments/${userId}`);
+                setBookingHistory(response.data);
+            } catch (error) {
+                message.error("Failed to load booking history.");
+            }
+        };
 
-    //     if (user) {
-    //         console.log("Fetching booking history for user:", user);
-    //         fetchBookingHistory(user.sub || ''); // Pass the userId as an argument with a default value of an empty string
-    //     }
-    // }, [user]);
+        if (user) {
+            console.log("Fetching booking history for user:", user);
+            fetchBookingHistory(user.sub || '');
+        }
+    }, [user]);
 
     const onFinish = async (values: BookingFormValues) => {
         setLoading(true);
@@ -186,7 +185,7 @@ export default function BookingDetails() {
                 </div>
             )}
 
-            {false ? (
+            {bookingHistory ? (
                 <>
                     <Card
                         style={{

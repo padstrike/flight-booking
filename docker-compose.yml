@@ -54,7 +54,7 @@ services:
     depends_on:
       - api
     environment:
-      REACT_APP_API_URL: http://api:5000
+      NEXT_PUBLIC_API_URL: http://api:5000
       AUTH0_SECRET: 'bf3ddda060e88170cd0f41839b0f0416d1ee5d5509fed43df22de86b31882544'
       AUTH0_BASE_URL: 'http://localhost:3000'
       AUTH0_ISSUER_BASE_URL: 'https://dev-8av4qfx77arjyiay.us.auth0.com'

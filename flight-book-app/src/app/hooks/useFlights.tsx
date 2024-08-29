@@ -10,6 +10,7 @@ export const useFlights = () => {
     const fetchFlights = async () => {
       try {
         const response = await api.get('/flights');
+        // console.log('response', response);
         setFlights(response.data);
         setError(null);
       } catch (error) {
