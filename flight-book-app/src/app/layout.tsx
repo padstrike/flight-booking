@@ -1,7 +1,7 @@
 'use client';
 
 import React , {useEffect} from 'react';
-import { Layout } from 'antd';
+import { Layout } from 'antd-v5';
 import 'antd/dist/reset.css'; // Ant Design reset CSS
 import './globals.css'; // Global styles
 import { UserProvider } from '@auth0/nextjs-auth0/client';

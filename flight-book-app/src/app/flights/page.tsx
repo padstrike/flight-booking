@@ -1,29 +1,39 @@
-// pages/flights.tsx
-
 'use client';
 
 import React, { useEffect, useState, Suspense, lazy, useCallback } from 'react';
-import { Spin, Alert } from 'antd';
+import { Spin, Alert } from 'antd-v5';
 import { useFlightStore } from '../store/flightStore';
 import { useFlights } from '../hooks/useFlights';
 import api from '../utils/api';
 
+// Lazy load components
 const HeaderSearch = lazy(() => import('../components/HeaderSearch'));
 const SearchForm = lazy(() => import('../components/SearchForm'));
 const FlightResults = lazy(() => import('../components/FlightResults'));
 
 export default function FlightSearchPage() {
   const { flights, loading, error, setFlights, setLoading, setError } = useFlightStore();
-  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+  const [isMobile, setIsMobile] = useState(false);
 
-  useFlights();
+  useFlights(); // Custom hook for fetching flights
 
+  // Handle resize event to set isMobile state
   useEffect(() => {
     const handleResize = () => setIsMobile(window.innerWidth <= 768);
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
+
+    if (typeof window !== 'undefined') {
+      setIsMobile(window.innerWidth <= 768); // Set initial value
+      window.addEventListener('resize', handleResize);
+    }
+
+    return () => {
+      if (typeof window !== 'undefined') {
+        window.removeEventListener('resize', handleResize);
+      }
+    };
   }, []);
 
+  // Handle search function using useCallback to prevent unnecessary re-renders
   const handleSearch = useCallback(async (values: { origin: string; destination: string }) => {
     try {
       setLoading(true);
@@ -38,6 +48,7 @@ export default function FlightSearchPage() {
     }
   }, [setFlights, setLoading, setError]);
 
+  // Render loading spinner or error message
   const renderLoadingOrError = () => (
     <>
       {loading && <Spin size="large" style={{ display: 'block', margin: '20px auto' }} />}
@@ -46,7 +57,7 @@ export default function FlightSearchPage() {
   );
 
   return (
-    <Suspense fallback={<Spin size="large" style={{ margin: '20px auto' }} />}>
+    <Suspense fallback={<Spin size="large" style={{ display: 'block', margin: '20px auto' }} />}>
       <div className={isMobile ? 'mobile-container' : 'desktop-container'}>
         {isMobile ? (
           <>

@@ -4,19 +4,19 @@ import { Document } from 'mongoose';
 @Schema({ timestamps: true })
 export class Payment extends Document {
   @Prop({ required: true })
-  userId: string;
+  userId: string = '';
 
   @Prop({ required: true })
-  bookingId: string;
+  bookingId: string = '';
 
   @Prop({ required: true })
-  encryptedPaymentDetails: string;
+  encryptedPaymentDetails: string = '';
 
   @Prop({ required: true, default: 'pending' })
-  status: string;
+  status: string = '';
 
   @Prop({ required: true })
-  createdAt: Date;
+  createdAt: Date = new Date();
 }
 
 export const PaymentSchema = SchemaFactory.createForClass(Payment);

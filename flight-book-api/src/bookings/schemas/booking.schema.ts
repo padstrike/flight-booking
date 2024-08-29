@@ -1,22 +1,22 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
 
-@Schema()
+@Schema({ timestamps: true })
 export class Booking extends Document {
   @Prop({ required: true })
-  userId: string;
+  userId: string = '';
 
   @Prop({ required: true })
-  flightId: string;
+  flightId: string = '';
 
   @Prop({ required: true })
-  totalPrice: number;
+  totalPrice: number = 0;
 
   @Prop({
-    type: [{ name: { type: String }, age: { type: Number } }],
+    type: [{ name: { type: String, required: true }, age: { type: Number, required: true } }],
     required: true,
   })
-  passengerDetails: { name: string; age: number }[];
+  passengerDetails: { name: string; age: number }[] = [];
 }
 
 export const BookingSchema = SchemaFactory.createForClass(Booking);

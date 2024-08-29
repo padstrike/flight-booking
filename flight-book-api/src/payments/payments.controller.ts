@@ -1,6 +1,5 @@
-import { Controller, Post, Body, Patch, Param, UseGuards } from '@nestjs/common';
-import { JwtAuthGuard } from '../auth/jwt-auth.guard';
-import { ApiTags, ApiBearerAuth, ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { Controller, Post, Body, Get, Param } from '@nestjs/common';
+import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { PaymentsService } from './payments.service';
 import { CreatePaymentDto } from './dto/create-payment.dto';
 
@@ -12,11 +11,17 @@ export class PaymentsController {
   @ApiOperation({ summary: 'Create a new payment' })
   @ApiResponse({ status: 201, description: 'Payment successfully created.' })
   @ApiResponse({ status: 400, description: 'Bad Request.' })
-
-  @ApiBearerAuth()
-  @UseGuards(JwtAuthGuard)
   @Post('create')
   async createPayment(@Body() createPaymentDto: CreatePaymentDto) {
     return this.paymentsService.processPayment(createPaymentDto);
+  }
+
+  @ApiOperation({ summary: 'Get payment details by ID' })
+  @ApiResponse({ status: 200, description: 'Payment details retrieved successfully.' })
+  @ApiResponse({ status: 404, description: 'Payment not found.' })
+  @ApiResponse({ status: 400, description: 'Bad Request.' })
+  @Get(':id')
+  async getPaymentDetails(@Param('id') paymentId: string) {
+    return this.paymentsService.getBookingHistoryWithPaymentDetails(paymentId);
   }
 }

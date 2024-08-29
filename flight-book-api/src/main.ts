@@ -15,7 +15,6 @@ async function bootstrap() {
     .setTitle('Flight Booking API')
     .setDescription('API for searching flights and managing bookings')
     .setVersion('1.0')
-    .addBearerAuth()  // Enable Bearer authentication
     .build();
 
   const document = SwaggerModule.createDocument(app, config);

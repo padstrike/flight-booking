@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { Button, Typography, Layout, Row, Col, Card } from "antd";
+import { Button, Typography, Layout, Row, Col, Card } from "antd-v5";
 import { useRouter } from "next/navigation";
 import { DollarOutlined, ThunderboltOutlined, CustomerServiceOutlined } from "@ant-design/icons";
 
@@ -114,7 +114,7 @@ export default function HomePage() {
               hoverable
             >
               <Text style={{ fontStyle: "italic" }}>
-                "Flight Booker made planning my vacation so easy! I found great deals in minutes."
+                &quot;Flight Booker made planning my vacation so easy! I found great deals in minutes.&quot;
               </Text>
               <br />
               <Text strong>- Sarah W.</Text>
@@ -127,7 +127,7 @@ export default function HomePage() {
               hoverable
             >
               <Text style={{ fontStyle: "italic" }}>
-                "The customer service was outstanding. They helped me every step of the way."
+                &quot;The customer service was outstanding. They helped me every step of the way.&quot;
               </Text>
               <br />
               <Text strong>- John D.</Text>
@@ -140,7 +140,7 @@ export default function HomePage() {
               hoverable
             >
               <Text style={{ fontStyle: "italic" }}>
-                "I'll definitely be using Flight Booker again. Highly recommend!"
+                &quot;I&apos;ll definitely be using Flight Booker again. Highly recommend!&quot;
               </Text>
               <br />
               <Text strong>- Emily R.</Text>

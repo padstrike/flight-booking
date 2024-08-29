@@ -1,7 +1,6 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { ConfigModule } from '@nestjs/config';
-import { AuthModule } from './auth/auth.module';
 import { FlightsModule } from './flights/flights.module';
 import { BookingsModule } from './bookings/bookings.module';
 import { PaymentsModule } from './payments/payments.module';
@@ -13,8 +12,7 @@ import { LoggerModule } from './logger/logger.module'
     ConfigModule.forRoot({
       isGlobal: true,
     }),
-    MongooseModule.forRoot(process.env.MONGO_URL),
-    AuthModule,
+    MongooseModule.forRoot(process.env.MONGO_URL ?? 'mongodb://root:example@mongo:27017/nest_flight_booking?authSource=admin'),
     FlightsModule,
     BookingsModule,
     PaymentsModule,

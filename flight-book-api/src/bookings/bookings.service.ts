@@ -24,7 +24,7 @@ export class BookingsService {
 
       return savedBooking;
     } catch (error) {
-      throw new InternalServerErrorException('Failed to create booking', error.message);
+      throw new InternalServerErrorException('Failed to create booking', (error as Error).message);
     }
   }
 
@@ -47,7 +47,7 @@ export class BookingsService {
 
       return bookings;
     } catch (error) {
-      throw new InternalServerErrorException('Failed to retrieve bookings', error.message);
+      throw new InternalServerErrorException('Failed to retrieve bookings', (error as Error).message);
     }
   }
 }

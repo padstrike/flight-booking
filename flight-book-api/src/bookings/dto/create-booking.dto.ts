@@ -5,20 +5,20 @@ export class CreateBookingDto {
   @IsString()
   @IsNotEmpty()
   @ApiProperty({ example: 'userId123', description: 'User ID' })
-  userId: string;
+  userId: string = '';
 
   @IsString()
   @IsNotEmpty()
   @ApiProperty({ example: 'flightId123', description: 'Flight ID' })
-  flightId: string;
+  flightId: string = '';
 
   @IsNumber()
   @IsNotEmpty()
   @ApiProperty({ example: 300, description: 'Total price of the booking' })
-  totalPrice: number;
+  totalPrice: number = 0;
 
   @IsArray()
   @IsNotEmpty()
   @ApiProperty({ example: [{ name: 'John Doe', age: 30 }], description: 'Passenger details' })
-  passengerDetails: any[];
+  passengerDetails: any[] = [];
 }

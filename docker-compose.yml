@@ -1,0 +1,73 @@
+version: '3.8'
+services:
+  mongo:
+    image: mongo:latest
+    container_name: mongo
+    ports:
+      - '27017:27017'
+    volumes:
+      - mongo-data:/data/db
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: example
+    restart: always
+
+  redis:
+    image: redis:latest
+    container_name: redis-cache
+    ports:
+      - '6379:6379'
+    volumes:
+      - redis-data:/data
+    restart: always
+
+  api:
+    build:
+      context: ./flight-book-api
+      dockerfile: Dockerfile
+    container_name: flight-book-api
+    ports:
+      - '5000:5000'
+    depends_on:
+      - mongo
+      - redis
+    environment:
+      MONGO_URL: mongodb://root:example@mongo:27017/nest_flight_booking?authSource=admin
+      ENCRYPTION_KEY: 9ab8d2b8c22af989a0c86e4427ee8ed5c425c52b282eccf88f9a151ee0e7b9b1
+      ENCRYPTION_IV: 1acacf3d4b6aad0d8ffb24dad0de014f
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+    env_file:
+      - ./flight-book-api/.env
+    volumes:
+      - ./flight-book-api:/usr/src/app
+    command: npm run start:dev
+    restart: always
+
+  app:
+    build:
+      context: ./flight-book-app
+      dockerfile: Dockerfile
+    container_name: flight-book-app
+    ports:
+      - '3000:3000'
+    depends_on:
+      - api
+    environment:
+      REACT_APP_API_URL: http://api:5000
+      AUTH0_SECRET: 'bf3ddda060e88170cd0f41839b0f0416d1ee5d5509fed43df22de86b31882544'
+      AUTH0_BASE_URL: 'http://localhost:3000'
+      AUTH0_ISSUER_BASE_URL: 'https://dev-8av4qfx77arjyiay.us.auth0.com'
+      AUTH0_CLIENT_ID: '0dGj1xCnymvZcW3xeSKUtI65E25Q1axt'
+      AUTH0_CLIENT_SECRET: 'cnBxPoy85Ompcrjrz-Y2U7M6OLcp34mUWZ765nFCMddOOIR7KNf83z-HNi-RQ2GL'
+      G_TAG: G-WDHE8EHYZ8 
+    env_file:
+      - ./flight-book-app/.env
+    volumes:
+      - ./flight-book-app:/usr/src/app
+    command: npm start
+    restart: always
+
+volumes:
+  mongo-data:
+  redis-data:

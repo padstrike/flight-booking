@@ -12,5 +12,6 @@ import { RedisModule } from '../redis/redis.module';  // Import the RedisModule
   ],
   providers: [BookingsService],
   controllers: [BookingsController],
+  exports: [MongooseModule], 
 })
 export class BookingsModule {}

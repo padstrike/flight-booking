@@ -22,6 +22,13 @@ export class PaymentDetailsDto {
   @IsNotEmpty()
   @ApiProperty({ description: 'The CVV security code of the card' })
   cvv: string;
+
+  constructor() {
+    this.cardNumber = '';
+    this.cardHolder = '';
+    this.expiryDate = '';
+    this.cvv = '';
+  }
 }
 
 export class CreatePaymentDto {
@@ -40,4 +47,10 @@ export class CreatePaymentDto {
   @IsNotEmpty()
   @ApiProperty({ description: 'The payment details (e.g., credit card info)' })
   paymentDetails: PaymentDetailsDto;
+
+  constructor() {
+    this.userId = '';
+    this.bookingId = '';
+    this.paymentDetails = new PaymentDetailsDto();
+  }
 }

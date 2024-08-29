@@ -3,7 +3,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { Form, Button, DatePicker, Select, Typography } from 'antd';
+import { Form, Button, DatePicker, Select} from 'antd-v5';
 import { SwapRightOutlined } from '@ant-design/icons';
 import { useFlightStore } from '../store/flightStore';
 
@@ -50,7 +50,7 @@ export default function HeaderSearch({ onSearch, loading }: HeaderSearchProps) {
                         style={{ minWidth: 150 }}
                         showSearch
                         filterOption={(input, option) =>
-                            (option?.value ?? '').toLowerCase().includes(input.toLowerCase())
+                            (option?.value ?? '').toString().toLowerCase().includes(input.toLowerCase())
                         }
                         className="header-search-select"
                     >
@@ -68,7 +68,7 @@ export default function HeaderSearch({ onSearch, loading }: HeaderSearchProps) {
                         style={{ minWidth: 150 }}
                         showSearch
                         filterOption={(input, option) =>
-                            (option?.value ?? '').toLowerCase().includes(input.toLowerCase())
+                            (option?.value ?? '').toString().toLowerCase().includes(input.toLowerCase())
                         }
                         className="header-search-select"
                     >

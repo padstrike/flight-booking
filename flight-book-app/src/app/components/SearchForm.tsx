@@ -3,7 +3,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { Form, Button, DatePicker, Select, Typography } from 'antd';
+import { Form, Button, DatePicker, Select, Typography } from 'antd-v5';
 import { useFlightStore } from '../store/flightStore';
 import api from '../utils/api';
 
@@ -69,7 +69,7 @@ export default function SearchForm({ onSearch, loading }: SearchProps) {
             placeholder="Select origin airport"
             showSearch
             filterOption={(input, option) =>
-              (option?.value ?? '').toLowerCase().includes(input.toLowerCase())
+              (option?.value?.toString() ?? '').toLowerCase().includes(input.toLowerCase())
             }
           >
             {origins.map((origin) => (
@@ -89,7 +89,7 @@ export default function SearchForm({ onSearch, loading }: SearchProps) {
             placeholder="Select destination airport"
             showSearch
             filterOption={(input, option) =>
-              (option?.value ?? '').toLowerCase().includes(input.toLowerCase())
+              (option?.value?.toString() ?? '').toLowerCase().includes(input.toLowerCase())
             }
           >
             {destinations.map((destination) => (

@@ -1,7 +1,7 @@
 'use client';
 
-import React, { useEffect } from 'react';
-import { Card, Row, Col, Typography, Space, Button } from 'antd';
+import React from 'react';
+import { Card, Row, Col, Typography, Space, Button } from 'antd-v5';
 import { ArrowRightOutlined } from '@ant-design/icons';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
@@ -25,7 +25,6 @@ export default function FlightCard({ flight }: FlightCardProps) {
     return (
         <>
             <Card
-                hoverable
                 bordered={false}
                 style={{
                     borderRadius: '8px',
