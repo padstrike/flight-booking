@@ -56,10 +56,10 @@ export default function BookingDetails() {
     const [loading, setLoading] = useState(false);
     const router = useRouter();
     const { flightId, setFlightsId, setError } = useFlightStore();
-
+    
     useEffect(() => {
+        
         const storedFlightId = localStorage.getItem('selectedFlightId');
-
         const fetchFlightDetails = async () => {
             try {
                 setLoadingFlight(true);
@@ -185,7 +185,7 @@ export default function BookingDetails() {
                 </div>
             )}
 
-            {bookingHistory ? (
+            {!flight ? (
                 <>
                     <Card
                         style={{
